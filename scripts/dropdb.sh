@@ -1,1 +1,1 @@
-mongo --host mongodb:27017 trekodb --eval "db.tasks.drop()"
+mongo --host mongo:27017 trekodb --eval "db.tasks.drop()"
