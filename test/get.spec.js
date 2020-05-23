@@ -14,7 +14,7 @@ describe('get', () => {
 
         before((done) => {
             let tasks = [
-                { title: 'Estudar NodejS', owner: 'eu@papito.io', done: false },
+                { title: 'Estudar Capybara', owner: 'eu@papito.io', done: false },
                 { title: 'Fazer compras', owner: 'eu@papito.io', done: false },
                 { title: 'Estudar MongoDB', owner: 'eu@papito.io', done: true }
             ]
