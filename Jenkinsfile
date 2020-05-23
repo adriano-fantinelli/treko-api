@@ -1,49 +1,42 @@
 pipeline {
+  agent {
+  docker {
+    image "node:8-alpine"
+    args "--network=skynet"
+  }
+ }
+  stages {
+    stage("Build") {
+      steps {
+        sh "echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/main' >> /etc/apk/repositories"
 
-agent {
+        sh "echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/community' >> /etc/apk/repositories"
 
-docker {
+        sh "apk update"
 
-image "node:8-alpine"
+        sh "apk add mongodb yaml-cpp=0.6.2-r2"
 
-args "--network=skynet"
+        sh "chmod +x ./scripts/dropdb.sh"
 
+        sh "npm install"
+     }
+    }
+  stage("Test") {
+   steps {
+    sh "npm run test:ci"
+   }
+    post {
+      always {
+          junit "log/*.xml"
+       }
+    }
+  }
+    stage("Production") {
+      steps {
+        input: message "Go to production? (Click 'Proceed' to continue)"
+        sh "echo 'subindo em produção'"
+      }
+    }
+ }
 }
-
-}
-
-stages {
-
-stage("Build") {
-
-steps {
-
-sh "echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/main' >> /etc/apk/repositories"
-
-sh "echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/community' >> /etc/apk/repositories"
-
-sh "apk update"
-
-sh "apk add mongodb yaml-cpp=0.6.2-r2"
-
-sh "chmod +x ./scripts/dropdb.sh"
-
-sh "npm install"
-
-}
-
-}
-
-stage("Test") {
-
-steps {
-
-sh "npm run test:ci"
-
-}
-
-}
-
-}
-
-}
+© 2020 GitHub, Inc.
